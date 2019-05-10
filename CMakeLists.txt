@@ -32,18 +32,27 @@ install(DIRECTORY script
 
 # make docs
 # ROS_PARALLEL_JOBS='' catkin_make --pkg tork_moveit_tutorial -- docbuild
-add_custom_target(docbuild_${PROJECT_NAME}
+macro(build_doc _rosdistro)
+ add_custom_target(docbuild_${PROJECT_NAME}_${_rosdistro}
   COMMAND cmake -E remove_directory output
   COMMAND cmake -E make_directory output
-  COMMAND sphinx-build -b latex doc output
+  COMMAND cmake -E remove_directory doc_${_rosdistro}
+  COMMAND cmake -E copy_directory doc doc_${_rosdistro}
+  # pp -U "<$" ">" "\B" "|" ">" "<" ">" "#" "\\" -DROS_DISTRO=kinetic
+  COMMAND for file in doc/*.md\\; do gpp -U \"<$$\" \">\" \"\\B\" \"|\" \">\" \"<\" \">\" \"\#\" \"\\\\\"  -DROS_DISTRO=${_rosdistro} -o doc_${_rosdistro}/`basename $$file` $$file \\; done
+  COMMAND sphinx-build -b latex doc_${_rosdistro} output
   COMMAND cmake -E copy doc/by-nc-sa.png output/by-nc-sa.png
   #COMMAND cmake -E chdir output sh -c 'ls *.png | xargs extractbb'
   COMMAND cd output \\; ls *.png | xargs extractbb
   COMMAND sed -i 's@\\\\setcounter{tocdepth}{0}@@' output/${PROJECT_NAME}.tex
-  COMMAND sed -i 's@\\\\end{document}@\\\\newpage\\\\input{../doc/cc.tex}\\\\end{document}@' output/${PROJECT_NAME}.tex
+  COMMAND sed -i 's@\\\\end{document}@\\\\newpage\\\\fancyfoot{}\\\\input{../doc/cc.tex}\\\\end{document}@' output/${PROJECT_NAME}.tex
   COMMAND cmake -E chdir output platex ${PROJECT_NAME}.tex
   COMMAND cmake -E chdir output platex ${PROJECT_NAME}.tex
   COMMAND cmake -E chdir output dvipdfmx ${PROJECT_NAME}
-  COMMAND cmake -E copy output/${PROJECT_NAME}.pdf output/${PROJECT_NAME}-${${PROJECT_NAME}_VERSION}.pdf
+  COMMAND cmake -E rename output/${PROJECT_NAME}.pdf ${PROJECT_NAME}-${_rosdistro}-${${PROJECT_NAME}_VERSION}.pdf
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   )
+endmacro()
+
+build_doc(indigo)
+build_doc(kinetic)

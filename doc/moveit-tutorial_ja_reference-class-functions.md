@@ -6,12 +6,12 @@
 ### MoveGroupCommander クラス
 
 - GitHub - ros_planning/moveit_commander/src/moveit_commander/move_group.py
-  - [https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/move_group.py][67977aee]
+  - [https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/move_group.py][67977aee]
 - GitHub -  ros_planning/moveit/moveit_ros/planning_interface/move_group_interface/src/wrap_python_move_group.cpp
-  -  [https://github.com/ros-planning/moveit/blob/indigo-devel/moveit_ros/planning_interface/move_group_interface/src/wrap_python_move_group.cpp][7a957dfd]
+  -  [https://github.com/ros-planning/moveit/blob/<$ROS_DISTRO>-devel/moveit_ros/planning_interface/move_group_interface/src/wrap_python_move_group.cpp][7a957dfd]
 
-  [67977aee]: https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/move_group.py "move_group.py"
-  [7a957dfd]: https://github.com/ros-planning/moveit/blob/indigo-devel/moveit_ros/planning_interface/move_group_interface/src/wrap_python_move_group.cpp "wrap_python_move_group.cpp"
+  [67977aee]: https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/move_group.py "move_group.py"
+  [7a957dfd]: https://github.com/ros-planning/moveit/blob/<$ROS_DISTRO>-devel/moveit_ros/planning_interface/move_group_interface/src/wrap_python_move_group.cpp "wrap_python_move_group.cpp"
 
 ---
 #### def \_\_init\_\_(self, name, robot_description="robot_description"):
@@ -293,6 +293,7 @@
 - 戻り値
   - なし
 
+---
 #### def clear_pose_target(self, end_effector_link):
 
 - 機能
@@ -590,7 +591,7 @@
   - `joints` - bool, JointState, Pose : グループの動作目標
 	  （ bool の場合は wait に代入 )
 		 / デフォルト None
-	- `wait` - bool : 動作の終了をまつか否か / デフォルト True
+	- `wait` - bool : 動作の終了を待つか否か / デフォルト True
 - 戻り値
   - MoveItErroeCode : MoveIt! エラーコード
 
@@ -707,14 +708,14 @@
 ### RobotCommander クラス
 
 - GitHub -  ros-planning/moveit_commander/src/moveit_commander/robot.py
-  - [https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/robot.py][ad535b3a]
+  - [https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/robot.py][ad535b3a]
 - GitHub - ros-planning/moveit/moveit_ros/planning_interface/robot_interface/src/wrap_python_robot_interface.cpp
 
-  - [https://github.com/ros-planning/moveit/blob/indigo-devel/moveit_ros/planning_interface/robot_interface/src/wrap_python_robot_interface.cpp][4cfc3b2d]
+  - [https://github.com/ros-planning/moveit/blob/<$ROS_DISTRO>-devel/moveit_ros/planning_interface/robot_interface/src/wrap_python_robot_interface.cpp][4cfc3b2d]
 
-  [ad535b3a]: https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/robot.py "RobotCommander Class"
+  [ad535b3a]: https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/robot.py "RobotCommander Class"
 
-  [4cfc3b2d]: https://github.com/ros-planning/moveit/blob/indigo-devel/moveit_ros/planning_interface/robot_interface/src/wrap_python_robot_interface.cpp "wrap_python_robot_interface"
+  [4cfc3b2d]: https://github.com/ros-planning/moveit/blob/<$ROS_DISTRO>-devel/moveit_ros/planning_interface/robot_interface/src/wrap_python_robot_interface.cpp "wrap_python_robot_interface"
 
 ---
 #### def \_\_init\_\_(self, robot_description="robot_description"):
@@ -947,7 +948,7 @@
   - なし
 
 ---
-#### def def name(self):
+#### def name(self):
 
 - 機能
   - リンク名の取得
@@ -972,13 +973,13 @@
 ### PlanningSceneInterface クラス
 
 - GitHub - ros-planning/moveit_commander/src/moveit_commander/planning_scene_interface.py
-  - [https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/planning_scene_interface.py][844eea07]
+  - [https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/planning_scene_interface.py][844eea07]
 - GitHub -  ros-planning/moveit/moveit_ros/planning_interface/planning_scene_interface/src/wrap_python_planning_scene_interface.cpp
 
-  - [https://github.com/ros-planning/moveit/blob/indigo-devel/moveit_ros/planning_interface/planning_scene_interface/src/wrap_python_planning_scene_interface.cpp][86935f4f]
-  [844eea07]: https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/planning_scene_interface.py "GitHub - PlanningSceneInterface クラス"
+  - [https://github.com/ros-planning/moveit/blob/<$ROS_DISTRO>-devel/moveit_ros/planning_interface/planning_scene_interface/src/wrap_python_planning_scene_interface.cpp][86935f4f]
+  [844eea07]: https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/planning_scene_interface.py "GitHub - PlanningSceneInterface クラス"
 
-  [86935f4f]: https://github.com/ros-planning/moveit/blob/indigo-devel/moveit_ros/planning_interface/planning_scene_interface/src/wrap_python_planning_scene_interface.cpp "wrap_python_planning_scene_interface.cpp"
+  [86935f4f]: https://github.com/ros-planning/moveit/blob/<$ROS_DISTRO>-devel/moveit_ros/planning_interface/planning_scene_interface/src/wrap_python_planning_scene_interface.cpp "wrap_python_planning_scene_interface.cpp"
 
 ---
 #### def \_\_init\_\_(self):
@@ -1108,7 +1109,7 @@
 
 - 機能
   - 箱オブジェクトをロボットリンクに接続
-    - 指定があれば箱ブジェクトを作成
+    - 指定があれば箱オブジェクトを作成
 - 引数
   - `link` - str : 接続するロボットリンク名
   - `name` - str : 接続するオブジェクトの名前
@@ -1194,9 +1195,9 @@
 ### conversions の関数
 
 - GitHub - ros-planning/moveit_commander/src/moveit_commander/conversions.py
-  - [https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/conversions.py][0aa62cbe]
+  - [https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/conversions.py][0aa62cbe]
 
-  [0aa62cbe]: https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/conversions.py "conversions functions"
+  [0aa62cbe]: https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/conversions.py "conversions functions"
 
 ---
 #### def msg_to_string(msg):
@@ -1277,9 +1278,9 @@
 ### roscpp_initializer の関数
 
 - GitHub - ros-planning/moveit_commander/src/moveit_commander/roscpp_initializer.py
-  - [https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/roscpp_initializer.py][f6bf1bd0]
+  - [https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/roscpp_initializer.py][f6bf1bd0]
 
-  [f6bf1bd0]: https://github.com/ros-planning/moveit_commander/blob/indigo-devel/src/moveit_commander/roscpp_initializer.py "roscpp_initializer functions"
+  [f6bf1bd0]: https://github.com/ros-planning/moveit_commander/blob/<$ROS_DISTRO>-devel/src/moveit_commander/roscpp_initializer.py "roscpp_initializer functions"
 
 ---
 #### def roscpp_initialize(args):
