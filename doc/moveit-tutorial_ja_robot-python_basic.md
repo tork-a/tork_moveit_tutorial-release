@@ -25,7 +25,7 @@ hrpsys か Gazebo のどちらか一方のシミュレータと MoveIt! を起�
 
 **ターミナル** : 対話的プログラミングのコンソールの起動
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ rosrun tork_moveit_tutorial demo.py
 ```
 
@@ -40,6 +40,13 @@ In [1]: group = MoveGroupCommander("right_arm")
 [ INFO] [1511506815.442105792, 135.795000000]: Ready to take MoveGroup commands for group right_arm.
 
 In [2]:
+```
+
+- 注意：以下のように`TrajectoryExecution will use old action capability.`と表示される場合も有りますが問題ありません．
+```python
+In [1]: group = MoveGroupCommander("right_arm")
+[ INFO] [1511506815.441893962, 135.795000000]: TrajectoryExecution will use old action capability.
+[ INFO] [1511506815.442105792, 135.795000000]: Ready to take MoveGroup commands for group right_arm.
 ```
 
 - 注意 : MINAS TRA1 の場合はグループ名が異なります．
@@ -172,6 +179,10 @@ Out[32]: True
 手先の「姿勢」しか指定していないので
 手先の「位置」は思わぬところにあることもあります．
 
+- 注意：以下のようなエラーメッセージが表示された場合は，再度 `group.go()` をお送りください．
+```
+[ INFO] [1515668193.145149146, 166.319999999]: ABORTED: Solution found but controller failed during execution
+```
 
 ### 手先の位置と姿勢を指定して動かす
 
@@ -450,6 +461,22 @@ Out[95]: True
 In [96]: exit
 ```
 
+<$ifeq <$ROS_DISTRO>|indigo>
+
+- 注意: Indigoでは
+```
+terminate called after throwing an instance of 'boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::lock_error> >'
+  what():  boost: mutex lock failed in pthread_mutex_lock: Invalid argument
+Aborted (core dumped)
+```
+というエラーが表示されます．このままでも動作に支障はありませんが気になる方は以下のようにすることで正常終了できます．
+```
+In [97]: import moveit_commander
+In [98]: moveit_commander.roscpp_shutdown()
+In [99]: moveit_commander.os._exit(0)
+```
+
+<$endif>
 
 ### 直線補間軌道でロボットを動かす
 
@@ -476,7 +503,7 @@ In [96]: exit
 
 **ターミナル-1**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ roslaunch nextage_gazebo nextage_world.launch
 ```
 
@@ -484,7 +511,7 @@ $ roslaunch nextage_gazebo nextage_world.launch
 
 **ターミナル-2**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ roslaunch nextage_moveit_config moveit_planning_execution.launch
 ```
 
@@ -493,7 +520,7 @@ $ roslaunch nextage_moveit_config moveit_planning_execution.launch
 <!-- パッケージ名を実際のものと要整合 tork_moveit_tutorial -->
 **ターミナル-3**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ rosrun tork_moveit_tutorial nextage_moveit_tutorial_poses.py
 ```
 
@@ -557,21 +584,21 @@ nextage_moveit_tutorial_poses.py で実行している内容は
 
 **ターミナル-1**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ roslaunch baxter_gazebo baxter_world.launch
 ```
 
 **ターミナル-2**
 ```
-$ source /opt/ros/indigo/setup.bash
-$ rosrun baxtetools enable_robot.py -e
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
+$ rosrun baxter_tools enable_robot.py -e
 $ rosrun baxter_tools tuck_arms.py -u
 $ rosrun baxter_interface joint_trajectory_action_server.py
 ```
 
 **ターミナル-3**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ roslaunch baxter_moveit_config baxter_grippers.launch
 ```
 
@@ -580,7 +607,7 @@ $ roslaunch baxter_moveit_config baxter_grippers.launch
 <!-- パッケージ名を実際のものと要整合 tork_moveit_tutorial -->
 **ターミナル-4**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ rosrun tork_moveit_tutorial baxter_moveit_tutorial_poses.py
 ```
 
@@ -640,13 +667,13 @@ NEXTAGE OPEN の動作計画・動作の実行ファイルとの相違点は次�
 
 **ターミナル-1**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ roslaunch tra1_bringup tra1_bringup.launch simulation:=true
 ```
 
 **ターミナル-2**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ roslaunch tra1_bringup tra1_moveit.launch
 ```
 
@@ -655,7 +682,7 @@ $ roslaunch tra1_bringup tra1_moveit.launch
 <!-- パッケージ名を実際のものと要整合 tork_moveit_tutorial -->
 **ターミナル-3**
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 $ rosrun tork_moveit_tutorial tra1_moveit_tutorial_poses.py
 ```
 
