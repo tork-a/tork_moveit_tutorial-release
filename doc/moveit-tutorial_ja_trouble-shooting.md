@@ -84,7 +84,7 @@ tf の同期に問題が出ることはほぼありませんが，
 NTP サーバとの同期をとる作業を数回行ってください．
 
 ```
-$ ntpdate -q <ntp_server_address>
+$ sudo ntpdate -bv <ntp_server_address>
 ```
 
 目安として時間のずれが 10 [msec] 以下になるようにします．
@@ -95,6 +95,7 @@ NTP サーバはロボットである場合や他のサーバである場合が�
 
 ## Gazebo の問題
 
+<a id="gazebo-start-not-show-robot"></a>
 ### Gazebo を起動してもロボットが表示されない
 
 #### 【対策】PC で初めて Gazebo を起動した場合は「しばらく待つ」
@@ -115,18 +116,18 @@ $ env | grep ROS
 正常な場合の出力例
 
 ```
-ROS_ROOT=/opt/ros/indigo/share/ros
-ROS_PACKAGE_PATH=/opt/ros/indigo/share:/opt/ros/indigo/stacks
+ROS_ROOT=/opt/ros/<$ROS_DISTRO>/share/ros
+ROS_PACKAGE_PATH=/opt/ros/<$ROS_DISTRO>/share:/opt/ros/<$ROS_DISTRO>/stacks
 ROS_MASTER_URI=http://localhost:11311
 ROSLISP_PACKAGE_DIRECTORIES=
-ROS_DISTRO=indigo
-ROS_ETC_DIR=/opt/ros/indigo/etc/ros
+ROS_DISTRO=<$ROS_DISTRO>
+ROS_ETC_DIR=/opt/ros/<$ROS_DISTRO>/etc/ros
 ```
 
 ROS の環境設定に問題がある場合は設定し直します．
 
 ```
-$ source /opt/ros/indigo/setup.bash
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
 ```
 
 #### 【対策】全ての ROS ノードを終了して再起動
