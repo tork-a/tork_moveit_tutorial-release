@@ -1,0 +1,12 @@
+Source: ros-melodic-tork-moveit-tutorial
+Section: misc
+Priority: optional
+Maintainer: TORK <dev@opensource-robotics.tokyo.jp>
+Build-Depends: debhelper (>= 9.0.0), ros-melodic-catkin
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-melodic-tork-moveit-tutorial
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-melodic-gazebo-ros, ros-melodic-moveit-commander, ros-melodic-moveit-ros-move-group, ros-melodic-moveit-ros-planning, ros-melodic-moveit-ros-planning-interface, ros-melodic-moveit-ros-visualization, ros-melodic-moveit-simple-controller-manager
+Description: The tork_moveit_tutorial package
