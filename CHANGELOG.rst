@@ -2,6 +2,67 @@
 Changelog for package tork_moveit_tutorial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.1 (2022-01-11)
+------------------
+* more fix for melodic .circleci (`#57 <https://github.com/tork-a/tork_moveit_tutorial/issues/57>`_)
+* Contributors: Tokyo Opensource Robotics Developer 534
+
+0.1.0 (2022-01-11)
+------------------
+* add melodic sections (`#55 <https://github.com/tork-a/tork_moveit_tutorial/issues/55>`_)
+* add example with myCobot (`#54 <https://github.com/tork-a/tork_moveit_tutorial/issues/54>`_)
+* fix typo MINAS-TRA1 -> KHI Duaro (`#53 <https://github.com/tork-a/tork_moveit_tutorial/issues/53>`_)
+* mod for kinetic with checking ROS version and normalizing orientation (`#47 <https://github.com/tork-a/tork_moveit_tutorial/issues/47>`_)
+* fix CI (`#49 <https://github.com/tork-a/tork_moveit_tutorial/issues/49>`_)
+* fix a typo 'movieit' to 'moveit' (`#44 <https://github.com/tork-a/tork_moveit_tutorial/issues/44>`_)
+* Bump jinja2 from 2.11.1 to 2.11.3 in /.circleci (`#52 <https://github.com/tork-a/tork_moveit_tutorial/issues/52>`_)
+* Bump urllib3 from 1.25.8 to 1.26.5 in /.circleci (`#50 <https://github.com/tork-a/tork_moveit_tutorial/issues/50>`_)
+* Bump babel from 2.8.0 to 2.9.1 in /.circleci (`#56 <https://github.com/tork-a/tork_moveit_tutorial/issues/56>`_)
+
+* Contributors: Kei Okada, Tokyo Opensource Robotics Developer 534, Yosuke Yamamoto, dependabot[bot]
+
+0.0.10 (2020-01-23)
+-------------------
+* mod a file name of the additional chapter (`#43 <https://github.com/tork-a/tork_moveit_tutorial/issues/43>`_)
+
+  * fix long line to fit page size
+  * fix to pass 'prefix' error
+  * mod markdown of the additional chapter
+  * remove ifeq-endif in the additional chapter
+  * mod a file name of the additional chapter
+
+* Contributors: Tokyo Opensource Robotics Developer 534, Yosuke Yamamoto
+
+0.0.9 (2020-01-22)
+------------------
+* fix documents within 110 pages (`#42 <https://github.com/tork-a/tork_moveit_tutorial/issues/42>`_)
+* add a chapter of running your own program for ROS kinetic (`#41 <https://github.com/tork-a/tork_moveit_tutorial/issues/41>`_)
+* Contributors: Tokyo Opensource Robotics Developer 534, Yosuke Yamamoto
+
+0.0.8 (2020-01-22)
+------------------
+* Move kinetic baxter (`#36 <https://github.com/tork-a/tork_moveit_tutorial/issues/36>`_)
+
+  * move compute_cartesian_path() descriptions before the waypoints plan descriptions
+  * mod docs for ROS kinetic with KHI duaro robot instead of Baxter Research Robot
+  * add info about quaternion
+  * add notes of EEF and Quarternion
+  * mod. a wrong filename
+  * wrote running-your-own-program to the end
+  * remove baxter robot in kinetic tutorial
+
+* Contributors: Yosuke Yamamoto
+
+0.0.7 (2019-07-01)
+------------------
+* add KHI duaro tutorial (ROS Kinetic only) (`#34 <https://github.com/tork-a/tork_moveit_tutorial/issues/34>`_)
+* Add kinetic images (`#30 <https://github.com/tork-a/tork_moveit_tutorial/issues/30>`_)
+
+  * remove html comment lines
+  * add ros kinetic screen capture images
+
+* Contributors: Yosuke Yamamoto
+
 0.0.6 (2019-03-13)
 ------------------
 * Enable to run both indigo and kinetic (`#27 <https://github.com/tork-a/tork_moveit_tutorial/issues/27>`_)

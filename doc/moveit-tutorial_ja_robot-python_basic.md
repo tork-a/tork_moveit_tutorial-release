@@ -33,6 +33,10 @@ $ rosrun tork_moveit_tutorial demo.py
 ### 特定の関節を動かす
 
 プログラムから関節を動かすなどをするために「右腕」の `group` を作成します．
+次の `In[1]:` 以下につづくプログラムを入力して [Enter/Return] キーを押して
+1行ずつ実行してください．
+
+- 補足 : `In [1]:` の `[ ]` の中の数字はプログラム入力するたびに更新されます．本チュートリアルにある入力例にある数字と一致しない場合がありますがそれは問題ありませんので，そのままチュートリアルを進めてください．
 
 ```python
 In [1]: group = MoveGroupCommander("right_arm")
@@ -51,8 +55,16 @@ In [1]: group = MoveGroupCommander("right_arm")
 
 - 注意 : MINAS TRA1 の場合はグループ名が異なります．
 ```python
-In [4]: group = MoveGroupCommander("manipulator")
+In [1]: group = MoveGroupCommander("manipulator")
 ```
+
+<$ifeq <$ROS_DISTRO>|melodic>
+
+- 注意 : myCobot の場合はグループ名が異なります．
+```python
+In [1]: group = MoveGroupCommander("arm_group")
+```
+<$endif>
 
 グループ `group` に含まれる関節の名前を `get_joints()` で調べます．
 
@@ -199,9 +211,10 @@ Out[32]: True
 どれを渡しても `set_pose_target()` 内で判断して適切な処理がなされます．
 
 - 参考 : GitHub - move_group.py 内の `set_pose_target()` の定義
-  - [https://github.com/ros-planning/moveit/blob/35a94c96ab21e8c8c2994adbf47cc7e39e30cfe7/moveit_commander/src/moveit_commander/move_group.py#L252][6cf69e4b]
 
-  [6cf69e4b]: https://github.com/ros-planning/moveit/blob/35a94c96ab21e8c8c2994adbf47cc7e39e30cfe7/moveit_commander/src/moveit_commander/move_group.py#L252 "set_pose_target()"
+[https://github.com/ros-planning/moveit/blob/1.0.2/moveit_commander/src/moveit_commander/move_group.py#L252][6cf69e4b]
+
+  [6cf69e4b]: https://github.com/ros-planning/moveit/blob/1.0.2/moveit_commander/src/moveit_commander/move_group.py#L252 "set_pose_target()"
 
 それでは右手先の位置と姿勢を指定して腕を動かしてみます．
 まずは 位置とRPY角 を `set_pose_target()` に渡して動作させます．
@@ -232,6 +245,23 @@ In [47]: group.set_pose_target( [ 0.3, -0.3, 0.5, 0.0, -1.0, 0.0, 0.0] )
 In [48]: group.go()
 Out[48]: True
 ```
+
+> - クォータニオン（四元数/しげんすう）
+>     - 空間上の姿勢を表現するための4つの成分をもつベクトル
+>         - 複素数から拡張された数体系
+>     - 回転の結合・補間の計算が容易
+>     - Roll/Pitch/Yaw のオイラー角により姿勢を表現した場合と比べて
+>         - 長所
+>             - ジンバルロックという特異点がない
+>             - 計算が速い
+>         - 短所
+>             - 直感的に分かりにくい
+>     - 比較的理解しやすい Roll/Pitch/Yaw からクォータニオンに変換することも可能
+>         - 3D Rotation Converter
+>             - https://www.andre-gaschler.com/rotationconverter/
+>         - ROS Wiki - Quaternion Basics
+>             - http://wiki.ros.org/tf2/Tutorials/Quaternions
+>     - ロボット以外では航空宇宙や 3D グラフィックスなどの分野で用いられる
 
 更に `Pose` 型を `set_pose_target()` に渡して腕を動かしてみます．
 
@@ -317,12 +347,41 @@ Out[70]: True
 にて説明します．
 
 
+### 直線補間軌道でロボットを動かす
+
+`group.plan()` や `group.go()` を用いた動作計画では動作開始姿勢と目標姿勢の間の動作は
+各関節の開始角度と目標角度の間を補間した動作として計画されます．
+このことは開始姿勢や目標姿勢として指定した姿勢以外の動作途中におけるエンドエフェクタの姿勢は
+保証されないことを意味します．
+
+エンドエフェクタを目標姿勢間で直線的に動作させたい場合は
+`group.compute_cartesian_path()` を用いて動作計画をします．
+`compute_cartesian_path()` はその名前のとおり，
+直行座標（=デカルト座標: Cartesian Coordinates）における補間軌道（Path）を作成します．
+
+`group.plan()` や `group.go()` で作成された動作計画（画像:左）と
+`group.compute_cartesian_path()` で作成された動作計画（画像:右）を比較すると
+次のようになります．
+
+![MoveIt! - Trajectory Comparison / compute_cartesian_path()](images/nextage_moveit_cartesian-path_linear-trajectory_comparison.png)
+
+`compute_cartesian_path()` の具体的な使用方法は本項に続く項目の
+
+- 連続した指令をロボットに送る
+- 四角形や円に沿ってエンドエフェクタを動かす
+
+を通して学習します．
+
+
 ### 連続した指令をロボットに送る
 
 ロボットの複数の異なる姿勢を指示して動作計画と実行を行います．
 
-複数の姿勢を指定した動作計画を行うには `compute_cartesian_path()` を用います．
- `compute_cartesian_path()` には次のものを渡します．
+複数の姿勢を指定した動作計画を行う場合も直線補間軌道でロボットを動かす場合と同じ 
+`compute_cartesian_path()` を用います．
+
+`compute_cartesian_path( self, waypoints, eef_step, jump_threshold, avoid_collisions = True )` 
+には次のものを渡します．
 
 - `waypoints` : エンドエフェクタが経由する姿勢のリスト
 - `eef_step` : エンドエフェクタの姿勢を計算する間隔の距離
@@ -478,18 +537,6 @@ In [99]: moveit_commander.os._exit(0)
 
 <$endif>
 
-### 直線補間軌道でロボットを動かす
-
-目標姿勢間を直線的に動作させたい場合も
-`group.compute_cartesian_path()` で動作計画をすると
-パラメータに従って直線補間軌道が作成されます．
-
-`group.plan()` や `group.go()` で作成された動作計画（画像:左）と
-`group.compute_cartesian_path()` で作成された動作計画（画像:右）を比較すると
-次のようになります．
-
-![MoveIt! - Trajectory Comparison / compute_cartesian_path()](images/nextage_moveit_cartesian-path_linear-trajectory_comparison.png)
-
 
 ## プログラムファイルを実行する
 
@@ -517,7 +564,6 @@ $ roslaunch nextage_moveit_config moveit_planning_execution.launch
 
 動作プログラムファイルを実行します．
 
-<!-- パッケージ名を実際のものと要整合 tork_moveit_tutorial -->
 **ターミナル-3**
 ```
 $ source /opt/ros/<$ROS_DISTRO>/setup.bash
@@ -580,6 +626,8 @@ nextage_moveit_tutorial_poses.py で実行している内容は
 - `rospy.loginfo()` の表示内容もどの箇所の実行ログかわかるように変更
 
 
+<$ifeq <$ROS_DISTRO>|indigo>
+
 ### Baxter Research Robot の場合
 
 **ターミナル-1**
@@ -604,7 +652,6 @@ $ roslaunch baxter_moveit_config baxter_grippers.launch
 
 動作プログラムファイルを実行します．
 
-<!-- パッケージ名を実際のものと要整合 tork_moveit_tutorial -->
 **ターミナル-4**
 ```
 $ source /opt/ros/<$ROS_DISTRO>/setup.bash
@@ -661,6 +708,8 @@ NEXTAGE OPEN の動作計画・動作の実行ファイルとの相違点は次�
 
 - ターゲットポーズの位置・姿勢を Baxter の機構に適したものに変更
 
+<$endif>
+
 
 ### MINAS TRA1 の場合
 
@@ -679,7 +728,6 @@ $ roslaunch tra1_bringup tra1_moveit.launch
 
 動作プログラムファイルを実行します．
 
-<!-- パッケージ名を実際のものと要整合 tork_moveit_tutorial -->
 **ターミナル-3**
 ```
 $ source /opt/ros/<$ROS_DISTRO>/setup.bash
@@ -732,18 +780,200 @@ if __name__ == '__main__':
 
 ```
 
-NEXTAGE OPEN や Baxter Research Robot
-の動作計画・動作の実行ファイルとの相違点は次のとおりです．
+他のロボットの動作計画・動作の実行ファイルとの相違点は次のとおりです．
 
 - `group = MoveGroupCommander()` に渡すグループ名を `"manipulator"` に変更
 - ターゲットポーズの位置・姿勢を MINAS TRA1 の機構に適したものに変更
 
 
+<$ifneq <$ROS_DISTRO>|indigo>
+
+### KHI duaro の場合
+
+**ターミナル-1**
+```
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
+$ roslaunch khi_duaro_gazebo duaro_world.launch
+```
+
+**ターミナル-2**
+```
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
+$ roslaunch khi_duaro_moveit_config moveit_planning_execution.launch
+```
+
+動作プログラムファイルを実行します．
+
+**ターミナル-3**
+```
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
+$ rosrun tork_moveit_tutorial duaro_moveit_tutorial_poses.py
+```
+
+**duaro_moveit_tutorial_poses.py**
+
+```python
+#!/usr/bin/env python
+
+from tork_moveit_tutorial import *
+
+
+if __name__ == '__main__':
+
+    init_node()
+
+    group = MoveGroupCommander("upper_arm")
+
+    # Pose Target 1
+    rospy.loginfo( "Start Pose Target 1")
+    pose_target_1 = Pose()
+
+    pose_target_1.position.x =  0.0
+    pose_target_1.position.y =  0.55
+    pose_target_1.position.z =  1.0
+    pose_target_1.orientation.x =  0.0
+    pose_target_1.orientation.y =  0.0
+    pose_target_1.orientation.z =  0.0
+    pose_target_1.orientation.w =  0.0
+
+    rospy.loginfo( "Set Target to Pose:\n{}".format( pose_target_1 ) )
+    group.set_pose_target( pose_target_1 )
+    group.go()
+
+    # Pose Target 2
+    rospy.loginfo( "Start Pose Target 2")
+    pose_target_2 = Pose()
+
+    pose_target_2.position.x = -0.55
+    pose_target_2.position.y = -0.0
+    pose_target_2.position.z =  1.05
+    pose_target_2.orientation.x =  0.0
+    pose_target_2.orientation.y =  0.0
+    pose_target_2.orientation.z =  0.707
+    pose_target_2.orientation.w =  0.707
+
+    rospy.loginfo( "Set Target to Pose:\n{}".format( pose_target_2 ) )
+    group.set_pose_target( pose_target_2 )
+    group.go()
+
+```
+
+他のロボットの動作計画・動作の実行ファイルとの相違点は次のとおりです．
+
+- `group = MoveGroupCommander()` に渡すグループ名を `"upper_arm"` に変更
+- ターゲットポーズの位置・姿勢を KHI duaro の機構に適したものに変更
+
+<$endif>
+
+
+<$ifeq <$ROS_DISTRO>|melodic>
+
+### myCobot の場合
+
+**ターミナル-1**
+```
+$ source ~/catkin_ws/devel/setup.bash
+$ roslaunch roslaunch mycobot_320_moveit demo.launch
+```
+
+動作プログラムファイルを実行します．
+
+**ターミナル-2**
+```
+$ source /opt/ros/<$ROS_DISTRO>/setup.bash
+$ rosrun tork_moveit_tutorial mycobot_moveit_tutorial_poses.py
+```
+
+`set_pose_target` を用いて手先位置姿勢を指定し，腕を動かすプログラムの例が以下になります．
+
+**mycobot_moveit_tutorial_poses.py**
+
+```python
+#!/usr/bin/env python
+
+from tork_moveit_tutorial import *
+
+if __name__ == '__main__':
+    init_node()
+
+    group = MoveGroupCommander("arm_group")
+    # Pose Target 1
+    rospy.loginfo( "Start Pose Target 1")
+    pose_target_1 = Pose()
+
+    pose_target_1.position.x = 0.3
+    pose_target_1.position.y = 0.0
+    pose_target_1.position.z = 0.3
+    pose_target_1.orientation.x = 0.0
+    pose_target_1.orientation.y = 0.0
+    pose_target_1.orientation.z = -0.7071
+    pose_target_1.orientation.w =  0.7071
+
+    rospy.loginfo( "Set Target to Pose:\n{}".format( pose_target_1 ) )
+    group.set_pose_target( pose_target_1 )
+    group.go()
+
+    # Pose Target 2
+    rospy.loginfo( "Start Pose Target 2")
+    pose_target_2 = Pose()
+
+    pose_target_2.position.x = 0.0
+    pose_target_2.position.y =-0.3
+    pose_target_2.position.z = 0.3
+    pose_target_2.orientation.z = -0.7071
+    pose_target_2.orientation.w =  0.7071
+
+    rospy.loginfo( "Set Target to Pose:\n{}".format( pose_target_2 ) )
+    group.set_pose_target( pose_target_2 )
+    group.go()
+```
+
+![myCobot MoveIt! - cartesian path](images/melodic/mycobot-moveit_pose.png)
+
+他のロボットの動作計画・動作の実行ファイルとの相違点は次のとおりです．
+
+- `group = MoveGroupCommander()` に渡すグループ名を `"arm_group"` に変更
+- ターゲットポーズの位置・姿勢を myCobot の機構に適したものに変更
+
+`Pose()` に指定する姿勢情報のクオータニオン情報は，
+`from tf.transformations import quaternion_from_euler`
+で得られる，`quaternion_from_euler(0, 0, -1.57079)` 関数を用いて取得します．
+
+また，このプログラムに続けて
+以下のようにうに，`pose_target_1`, `pose_target_2`を用いて
+`group.compute_cartesian_path([pose_target_1, pose_target_2], 0.01, 0.0)`
+として直線補間軌道を計画し，`group.execute( plan )` で実行します．
+
+```
+    # Compute Cartesian path
+    (plan, fraction) = group.compute_cartesian_path([pose_target_1, pose_target_2], 0.01, 0.0)
+    group.execute( plan )
+```
+
+
+
+![myCobot MoveIt! - cartesian path](images/melodic/mycobot-moveit_cartesian_path.png)
+
+<$endif>
+
+
 ### ROS や MoveIt! のメリット
 
-NEXTAGE OPEN や Baxter Research Robot，MINAS TRA1
+<$ifeq <$ROS_DISTRO>|indigo>
+
+NEXTAGE OPEN や Baxter Research Robot, MINAS TRA1
 の動作計画・動作プログラムの相違点を見ると下記の2ヶ所だけが
 各ロボットに対応しただけだということが分かります．
+
+<$endif>
+
+<$ifneq <$ROS_DISTRO>|indigo>
+
+NEXTAGE OPEN や MINAS TRA1，KHI duaro
+の動作計画・動作プログラムの相違点を見ると下記の2ヶ所だけが
+各ロボットに対応しただけだということが分かります．
+
+<$endif>
 
 - group = MoveGroupCommander() に渡すグループ名を各ロボットアームに対応したものにする
 - ターゲットポーズの位置・姿勢を各ロボットの機構に適したものにする
